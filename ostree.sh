@@ -65,16 +65,16 @@ function DISK_CREATE_LAYOUT {
         mklabel gpt \
         mkpart ${OSTREE_SYS_BOOT_LABEL} fat32 0% 257MiB \
         set 1 esp on \
-        mkpart ${OSTREE_SYS_ROOT_LABEL} xfs 257MiB 25GiB \
-        mkpart ${OSTREE_SYS_HOME_LABEL} xfs 25GiB 100%
+        mkpart ${OSTREE_SYS_ROOT_LABEL} ext4 257MiB 25GiB \
+        mkpart ${OSTREE_SYS_HOME_LABEL} ext4 25GiB 100%
 }
 
-# [DISK]: FILESYSTEM (ESP+XFS)
+# [DISK]: FILESYSTEM (ESP+EXT4)
 function DISK_CREATE_FORMAT {
-    ENV_CREATE_DEPS dosfstools xfsprogs
+    ENV_CREATE_DEPS dosfstools e2fsprogs
     mkfs.vfat -n ${OSTREE_SYS_BOOT_LABEL} -F 32 ${OSTREE_DEV_BOOT}
-    mkfs.xfs -L ${OSTREE_SYS_ROOT_LABEL} -f ${OSTREE_DEV_ROOT} -n ftype=1
-    mkfs.xfs -L ${OSTREE_SYS_HOME_LABEL} -f ${OSTREE_DEV_HOME} -n ftype=1
+    mkfs.ext4 -L ${OSTREE_SYS_ROOT_LABEL} -f ${OSTREE_DEV_ROOT}
+    mkfs.ext4 -L ${OSTREE_SYS_HOME_LABEL} -f ${OSTREE_DEV_HOME}
 }
 
 # [DISK]: BUILD DIRECTORY
